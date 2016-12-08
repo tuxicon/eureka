@@ -282,7 +282,7 @@ function updateData(value) {
 
     	data2.push(upData[value])
     	value=value+1
-      console.log(data2);
+      //console.log(data2);
     }
 	 // measure the domain (for x, unique letters) (for y [0,maxFrequency])
   // now the scales are finished and usable
@@ -401,7 +401,11 @@ function getEvaluate(expr, model="latest", attribute="Id,CC", count=1000, offset
 
   		$( "#slider-range" ).slider( "option", "max", parseInt(data.length));
       $("#graph").val("cv");
+     data = data.filter(function( obj ) {
+    return (typeof obj.venue !== 'undefined');
+    }); 
 
+     console.log(data)
 		ajaxDatavc = data;
 
       d3.select("svg").remove();
@@ -464,6 +468,9 @@ function getEvaluate(expr, model="latest", attribute="Id,CC", count=1000, offset
        newdata = result2.slice(0,250)
        newdata.sort(sort_by('citation', false, parseInt));
 		//console.log(JSON.stringify(result2));
+    newdata = newdata.filter(function( obj ) {
+    return (typeof obj.author !== 'undefined');
+    }); 
     ajaxDataAc = newdata
 
     var linq = Enumerable.From(py);
