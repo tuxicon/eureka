@@ -8,13 +8,77 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <style>
+
+          .bar{
+            fill: steelblue;
+          }
+
+          .bar:hover{
+            fill: brown;
+          }
+
+            .axis {
+              font: 10px sans-serif;
+            }
+
+            .axis path,
+            .axis line {
+              fill: none;
+              stroke: #000;
+              shape-rendering: crispEdges;
+            }
+
+        </style>
         <!-- Place favicon.ico in the root directory -->
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+        <script src="js/d3.v3.min.js"></script>
+        <script>
+        // set the dimensions of the canvas
+        $(document).ready(function() {
+
+            $("#my-query").keyup(function(event){
+                if(event.keyCode == 13){
+                    $("#submitbtn").click();
+                }
+            });
+
+
+            $("#submitbtn").click(function() {
+                query = $("#my-query").val();
+                console.log(query);
+                var expr = getInterpret(query);
+            });
+            
+            $( "#slider-range" ).slider({
+              range: "max",
+              min: 0,
+              max: 1000,
+              values: 0,
+              slide: function( event, ui ) {
+                var max  = $("#slider-range").slider("option", "max");
+                if(ui.value+14<max){
+                    updateData(ui.value);
+                }
+                
+                console.log(ui.value,max);
+              }
+            });
+
+            $("#graph").change(function (){
+                    var getValue = $(this).val();
+                    changeVis(getValue);
+            });
+
+        });
+
+        </script>
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -22,15 +86,29 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <p></p>
 
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+<script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
         <script src="js/plugins.js"></script>
+        <script src="http://neue.cc/linq.min.js"></script>
         <script src="js/main.js"></script>
         <div class="container">
-                <button id="submitbtn" type="button" class="btn btn-info">Get publication data</button>
+                <div class="input-group">
                 <input id="my-query" type="text" class="form-control" id="usr" placeholder="Enter text to search">
+                <span class="input-group-btn">
+                <button id="submitbtn" type="button" class="btn btn-info">Get publication data</button>
+                </span>
+                </div>
+                <select id="graph">
+                <option value="ca">Citation vs Author</option>
+                <option value="cv" selected>Citation vs Venue</option>
+                <option value="yp">Year vs Paper</option>
+                </select>
+                <div id="slider-range"></div>
+                <div id="chart"></div>
+
 
         </div>    
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
